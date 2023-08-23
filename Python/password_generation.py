@@ -2,7 +2,6 @@ import random
 
 from constants import ALPHA_CHARACTERS, NUMBERS, SYMBOLS
 from dataclasses import dataclass
-from encryption_and_decryption import Encryptor
 
 
 @dataclass

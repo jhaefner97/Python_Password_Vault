@@ -4,22 +4,26 @@ from pathlib import Path
 class Paths:
     def __init__(self) -> None:
         self.project_dir = Path.cwd().parent
-        self.env_dir: Path = self.project_dir / "ENV"
-        self.env_file: Path = self.env_dir / "encryption_keys.env"
 
+        """Database Paths"""
         self.db_dir: Path = self.project_dir / "DB"
         self.db_file: Path = self.db_dir / "passwords_db.db"
 
-        self.stored_procedures = self.db_dir / "Stored_Procedures"
-        self.insert_account_procedure = self.stored_procedures / "Insert_Account_Procedure.sql"
-        self.insert_password_hash_procedure = self.stored_procedures / "Insert_Password_Hash_Procedure.sql"
-        self.get_account_id_procedure = self.stored_procedures / "Get_Account_ID.sql"
+        """SQL Paths"""
+        self.SQL = self.project_dir / "SQL"
+        self.create_account_table = self.SQL / "Create_Account_Table.sql"
+        self.create_password_table = self.SQL / "Create_Password_Table.sql"
+        self.insert_account_procedure = self.SQL / "Insert_Account.sql"
+        self.insert_password_hash_procedure = self.SQL / "Insert_Password_Hash.sql"
+        self.get_account_id_procedure = self.SQL / "Get_Account_ID.sql"
+        self.get_password_hash = self.SQL / "Get_Password_Hash.sql"
 
-        self.keys_dir = self.env_dir / "Keys"
+        """Encryption Key Paths"""
+        self.keys_dir = self.project_dir / "Keys"
         self.private_key = self.keys_dir / "private_key.pem"
         self.public_key = self.keys_dir / "public_key.pem"
 
-        self.build_dirs(self.env_dir, self.db_dir, self.keys_dir)
+        self.build_dirs(self.db_dir, self.keys_dir)
 
     @staticmethod
     def build_dirs(*args: Path) -> None:
