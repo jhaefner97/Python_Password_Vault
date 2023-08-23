@@ -14,16 +14,22 @@ def build_pem_files() -> None:
         f.write(public_key.save_pkcs1())
 
 
-class Encryptor:
+def load_public_key() -> RSAPublicKey:
+    with open(paths.public_key, "rb") as f:
+        return serialization.load_pem_public_key(f.read())
+
+
+def load_private_key() -> RSAPrivateKey:
+    with open(paths.private_key, "rb") as f:
+        return serialization.load_pem_private_key(f.read(), password=None)
+
+
+class Encryption:
     def __init__(self, password_string: bytes):
         if not paths.public_key.is_file():
             build_pem_files()
-        self.public_key: RSAPublicKey | None = None
+        self.public_key: RSAPublicKey = load_public_key()
         self.password_str: bytes = password_string
-
-    def load_public_key(self) -> None:
-        with open(paths.public_key, "rb") as f:
-            self.public_key = serialization.load_pem_public_key(f.read())
 
     def encrypt_password(self) -> bytes:
         password_hash = self.public_key.encrypt(
@@ -37,13 +43,9 @@ class Encryptor:
         return password_hash
 
 
-class Decryptor:
+class Decryption:
     def __init__(self):
-        self.private_key: RSAPrivateKey | None = None
-
-    def load_private_key(self) -> None:
-        with open(paths.private_key, "rb") as f:
-            self.private_key = serialization.load_pem_private_key(f.read(), password=None)
+        self.private_key: RSAPrivateKey = load_private_key()
 
     def decrypt_password(self, password_hash: bytes) -> str:
         password = self.private_key.decrypt(
